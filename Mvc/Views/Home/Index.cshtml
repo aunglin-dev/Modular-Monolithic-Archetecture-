@@ -1,0 +1,39 @@
+﻿@using System.Security.Claims
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="text-center mt-5">
+
+    <h2 class="text-success">
+        Login Successful
+    </h2>
+
+    <p class="mt-4">
+        Welcome,
+        <strong>@User.Identity?.Name</strong>
+    </p>
+
+    <p>
+        Email:
+        @User.FindFirst(ClaimTypes.Email)?.Value
+    </p>
+
+    <p>
+        Role:
+        @User.FindFirst(ClaimTypes.Role)?.Value
+    </p>
+
+    <form asp-controller="Account"
+          asp-action="Logout"
+          method="post">
+
+        <button type="submit"
+                class="btn btn-danger">
+            Logout
+        </button>
+
+    </form>
+
+</div>

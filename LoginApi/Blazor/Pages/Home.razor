@@ -1,0 +1,100 @@
+﻿@page "/"
+@attribute [Authorize]
+
+@inject HttpClient Http
+@inject IJSRuntime JsRuntime
+
+<PageTitle>Home</PageTitle>
+
+<AuthorizeView>
+
+    <Authorized Context="authentication">
+
+        <div class="text-center mt-5">
+
+            <h2 class="text-success">
+                API Login Successful
+            </h2>
+
+            <p class="mt-4">
+                Welcome,
+                <strong>
+                    @authentication.User.Identity?.Name
+                </strong>
+            </p>
+
+            <p>
+                Email:
+                @authentication.User
+                .FindFirst("email")?.Value
+            </p>
+
+            <p>
+                Role:
+                @authentication.User
+                .FindFirst("role")?.Value
+            </p>
+
+            <button class="btn btn-info me-2"
+                    @onclick="LoadProfileAsync">
+                Test Protected API
+            </button>
+
+            <a href="/logout"
+               class="btn btn-danger">
+                Logout
+            </a>
+
+            @if (!string.IsNullOrWhiteSpace(_profileMessage))
+            {
+                <div class="alert alert-secondary mt-4">
+                    @_profileMessage
+                </div>
+            }
+
+        </div>
+
+    </Authorized>
+
+</AuthorizeView>
+
+@code {
+    private string? _profileMessage;
+
+    private async Task LoadProfileAsync()
+    {
+        string? token =
+            await JsRuntime.InvokeAsync<string?>(
+                "localStorage.getItem",
+                "authToken");
+
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            _profileMessage = "Token was not found.";
+            return;
+        }
+
+        using var request = new HttpRequestMessage(
+            HttpMethod.Get,
+            "api/auth/me");
+
+        request.Headers.Authorization =
+            new AuthenticationHeaderValue(
+                "Bearer",
+                token);
+
+        HttpResponseMessage response =
+            await Http.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            _profileMessage =
+                await response.Content.ReadAsStringAsync();
+        }
+        else
+        {
+            _profileMessage =
+                $"API returned {response.StatusCode}.";
+        }
+    }
+}
