@@ -1,0 +1,20 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Components.Authorization
+
+<PageTitle>Home</PageTitle>
+
+<h1>Welcome</h1>
+
+<AuthorizeView>
+    <Authorized>
+        <p>You are signed in as <strong>@context.User.Identity?.Name</strong>.</p>
+    </Authorized>
+    <NotAuthorized>
+        <p>
+            <a href="login">Login</a>
+            or
+            <a href="register">create an account</a>
+            to get started.
+        </p>
+    </NotAuthorized>
+</AuthorizeView>

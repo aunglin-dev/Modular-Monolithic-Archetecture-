@@ -1,1 +1,8 @@
-<Solution />
+<Solution>
+  <Folder Name="/WLoginApi/">
+    <Project Path="WApi/WApi.csproj" Id="a9e5b595-1b9d-4b8b-a6db-5aead8718c39" />
+    <Project Path="WBlazor/WBlazor.csproj" Id="4973f744-a726-41ba-aa31-cce87f9db414" />
+  </Folder>
+  <Project Path="Domain/Domain.csproj" Id="abbd96cc-fd68-483d-9dcf-be0289fb034c" />
+  <Project Path="WLoginMVC/WLoginMVC.csproj" Id="629efb70-3d48-40a9-89e3-56c368fb24d6" />
+</Solution>
