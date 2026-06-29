@@ -1,5 +1,8 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Domain
 {
@@ -37,6 +40,47 @@ namespace Domain
                 entity.HasIndex(u => u.Email)
                     .IsUnique();
             });
+        }
+    }
+
+    public static class AppDbContextExtensions
+    {
+        public static IServiceCollection AddDomainDbContext(
+            this IServiceCollection services,
+            string connectionString)
+        {
+            services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlServer(connectionString));
+
+            return services;
+        }
+
+        public static void ApplyDomainMigrations(this IServiceProvider serviceProvider)
+        {
+            using var scope = serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            dbContext.Database.Migrate();
+        }
+    }
+
+    public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
+    {
+        public AppDbContext CreateDbContext(string[] args)
+        {
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true)
+                .AddJsonFile("appsettings.Development.json", optional: true)
+                .AddEnvironmentVariables()
+                .Build();
+
+            var connectionString = configuration.GetConnectionString("DefaultConnection")
+                ?? "Server=.;Database=ModularDb;User Id=sa;Password=12345;TrustServerCertificate=true;MultipleActiveResultSets=true;";
+
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+            optionsBuilder.UseSqlServer(connectionString);
+
+            return new AppDbContext(optionsBuilder.Options);
         }
     }
 }
