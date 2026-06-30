@@ -1,0 +1,2 @@
+@model UserResponseModel
+<h1 class="h4">Profile</h1>@if(Model is null){<div class="alert alert-warning">Profile unavailable.</div>}else{<dl class="row"><dt class="col-sm-3">Name</dt><dd class="col-sm-9">@Model.FirstName @Model.LastName</dd><dt class="col-sm-3">Email</dt><dd class="col-sm-9">@Model.Email</dd><dt class="col-sm-3">Username</dt><dd class="col-sm-9">@Model.Username</dd></dl><a class="btn btn-outline-primary" asp-action="ChangePassword">Change password</a>}

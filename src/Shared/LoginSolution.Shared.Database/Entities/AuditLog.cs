@@ -1,0 +1,14 @@
+namespace LoginSolution.Shared.Database.Entities;
+
+public sealed class AuditLog
+{
+    public int Id { get; set; }
+    public int? UserId { get; set; }
+    public string Action { get; set; } = string.Empty;
+    public string Controller { get; set; } = string.Empty;
+    public string Method { get; set; } = string.Empty;
+    public string RequestPath { get; set; } = string.Empty;
+    public string IpAddress { get; set; } = string.Empty;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public string? Details { get; set; }
+}

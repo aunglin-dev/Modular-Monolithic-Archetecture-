@@ -1,0 +1,2 @@
+@model AccountBalanceModel
+<h1 class="h4">Account balance</h1>@if(Model is null){<div class="alert alert-warning">Balance unavailable.</div>}else{<div class="display-6">@Model.Balance.ToString("C")</div><p class="text-muted">Account @Model.AccountNumber as of @Model.AsOfUtc UTC</p>}
